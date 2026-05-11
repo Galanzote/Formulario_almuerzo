@@ -577,9 +577,20 @@
       detalle = '—';
     }
 
-    responses.push({ alumno, pedido, detalle, bebida, ingresadoPor, fecha: nowStr() });
+    const entry = { alumno, pedido, detalle, bebida, ingresadoPor, fecha: nowStr() };
+    responses.push(entry);
     renderTable();
-    showToast(`✓ ${alumno.split(' ')[0]} registrado/a`);
+
+    // Enviar a Google Sheets
+    showToast('⏳ Guardando en planilla...', false);
+    fetch('https://script.google.com/macros/s/AKfycbwgfB7-uQAkJKLS6666HJCHGTxwJihylMQcT9Q5-obZgJTjfueseY_CWsTApu_aZ4McRg/exec', {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(entry)
+    })
+    .then(() => showToast(`✓ ${entry.alumno.split(' ')[0]} guardado/a en la planilla`))
+    .catch(() => showToast('⚠ No se pudo conectar con la planilla. Datos guardados solo localmente.', true));
 
     // Reset menú pero mantiene nombre ingresador
     document.getElementById('alumno').value = '';
