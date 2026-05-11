@@ -14,21 +14,21 @@
     --sp-border: #edebe9; --sp-bg: #f3f2f1; --sp-white: #ffffff;
     --sp-red: #d13438; --sp-green: #107c10;
     --sp-input-border: #8a8886; --sp-input-focus: #0078d4;
+    --sp-yellow: #ffd700;
   }
   body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--sp-bg); color: var(--sp-text); min-height: 100vh; }
 
   .sp-header { background: var(--sp-blue); padding: 0 32px; height: 48px; display: flex; align-items: center; gap: 12px; }
   .sp-header-title { color: #fff; font-size: 15px; font-weight: 600; }
   .sp-header-sub { color: rgba(255,255,255,.75); font-size: 13px; }
-
   .sp-breadcrumb { background: var(--sp-white); border-bottom: 1px solid var(--sp-border); padding: 8px 32px; font-size: 12px; color: var(--sp-text-secondary); display: flex; align-items: center; gap: 6px; }
   .sp-breadcrumb a { color: var(--sp-blue); text-decoration: none; }
 
-  .sp-main { max-width: 720px; margin: 28px auto; padding: 0 16px; }
+  .sp-main { max-width: 740px; margin: 28px auto; padding: 0 16px 48px; }
 
   .sp-form-header { background: var(--sp-white); border: 1px solid var(--sp-border); border-top: 4px solid var(--sp-blue); border-radius: 2px 2px 0 0; padding: 24px 32px 20px; }
   .sp-form-title { font-size: 20px; font-weight: 600; color: var(--sp-text); display: flex; align-items: center; gap: 10px; }
-  .sp-form-title .icon { width: 36px; height: 36px; background: var(--sp-blue-light); border-radius: 4px; display: grid; place-items: center; font-size: 20px; }
+  .sp-form-title .icon { width: 36px; height: 36px; background: var(--sp-blue-light); border-radius: 4px; display: grid; place-items: center; font-size: 20px; flex-shrink:0; }
   .sp-form-subtitle { font-size: 13px; font-weight: 600; color: var(--sp-blue); margin-top: 4px; }
   .sp-form-desc { font-size: 13px; color: var(--sp-text-secondary); margin-top: 6px; line-height: 1.5; }
   .sp-required-note { font-size: 12px; color: var(--sp-text-secondary); margin-top: 14px; }
@@ -36,33 +36,65 @@
 
   .sp-form-body { background: var(--sp-white); border: 1px solid var(--sp-border); border-top: none; padding: 0 32px 28px; }
   .sp-section { padding-top: 22px; }
-  .sp-section-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .6px; color: var(--sp-text-secondary); padding-bottom: 10px; border-bottom: 1px solid var(--sp-border); margin-bottom: 18px; }
+  .sp-section-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .6px; color: var(--sp-text-secondary); padding-bottom: 10px; border-bottom: 1px solid var(--sp-border); margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; }
   .sp-field { margin-bottom: 20px; }
   .sp-label { display: flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 600; color: var(--sp-text); margin-bottom: 6px; }
   .sp-required-mark { color: var(--sp-red); font-size: 14px; }
 
-  .sp-select, .sp-input {
-    width: 100%; height: 32px; border: 1px solid var(--sp-input-border); border-radius: 2px;
-    padding: 0 10px; font-size: 14px; font-family: inherit; color: var(--sp-text);
-    background: var(--sp-white); transition: border-color .1s;
-  }
-  .sp-select {
-    appearance: none; -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23605e5c' d='M1.41 0L6 4.58 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat; background-position: right 10px center; cursor: pointer;
-  }
+  .sp-input { width: 100%; height: 32px; border: 1px solid var(--sp-input-border); border-radius: 2px; padding: 0 10px; font-size: 14px; font-family: inherit; color: var(--sp-text); background: var(--sp-white); transition: border-color .1s; }
+  .sp-select { width: 100%; height: 32px; border: 1px solid var(--sp-input-border); border-radius: 2px; padding: 0 10px; font-size: 14px; font-family: inherit; color: var(--sp-text); background: var(--sp-white); transition: border-color .1s; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23605e5c' d='M1.41 0L6 4.58 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; cursor: pointer; }
   .sp-select:focus, .sp-input:focus { outline: none; border-color: var(--sp-input-focus); box-shadow: 0 0 0 1px var(--sp-input-focus); }
 
-  .sp-choices { display: flex; flex-direction: column; gap: 10px; }
-  .sp-choice { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 1px solid var(--sp-border); border-radius: 2px; cursor: pointer; transition: background .1s, border-color .1s; user-select: none; }
-  .sp-choice:hover { background: #faf9f8; border-color: #c8c6c4; }
-  .sp-choice.selected { background: #eff6fc; border-color: var(--sp-blue); }
-  .sp-choice input[type=radio] { width: 16px; height: 16px; accent-color: var(--sp-blue); cursor: pointer; flex-shrink: 0; }
-  .sp-choice-text { font-size: 14px; }
-  .sp-choice-icon { font-size: 18px; }
+  /* MODE TOGGLE */
+  .mode-toggle { display: flex; gap: 0; border: 1px solid var(--sp-border); border-radius: 3px; overflow: hidden; margin-bottom: 20px; }
+  .mode-btn { flex: 1; padding: 10px 12px; background: var(--sp-white); border: none; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--sp-text-secondary); cursor: pointer; transition: background .15s, color .15s; text-align: center; border-right: 1px solid var(--sp-border); }
+  .mode-btn:last-child { border-right: none; }
+  .mode-btn.active { background: var(--sp-blue); color: #fff; }
+  .mode-btn .mode-icon { font-size: 18px; display: block; margin-bottom: 4px; }
+  .mode-btn .mode-label { display: block; font-size: 12px; }
 
-  .sp-subsection { border-left: 3px solid var(--sp-blue-light); padding-left: 16px; margin-top: 14px; animation: fadeIn .2s ease; }
-  .sp-subsection-label { font-size: 12px; font-weight: 600; color: var(--sp-blue); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; }
+  /* COMBO CARDS */
+  .combo-cards { display: flex; flex-direction: column; gap: 12px; }
+  .combo-card { border: 1px solid var(--sp-border); border-radius: 3px; cursor: pointer; transition: border-color .15s, background .15s; overflow: hidden; }
+  .combo-card:hover { border-color: #c8c6c4; }
+  .combo-card.selected { border-color: var(--sp-blue); background: #f0f6fc; }
+  .combo-card-header { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px 10px; }
+  .combo-card-radio { margin-top: 3px; width: 16px; height: 16px; accent-color: var(--sp-blue); flex-shrink:0; cursor:pointer; }
+  .combo-card-title { font-size: 14px; font-weight: 600; color: var(--sp-text); margin-bottom: 4px; }
+  .combo-card-desc { font-size: 12px; color: var(--sp-text-secondary); line-height: 1.5; }
+  .combo-card-tag { display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; font-size: 11px; color: var(--sp-text-secondary); background: #f3f2f1; border-radius: 10px; padding: 2px 8px; }
+
+  /* REMOVE INGREDIENTS */
+  .remove-section { border-top: 1px solid var(--sp-border); padding: 12px 16px 14px 44px; background: #faf9f8; animation: fadeIn .2s ease; }
+  .remove-title { font-size: 12px; font-weight: 600; color: var(--sp-text-secondary); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .4px; }
+  .remove-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .remove-chip { display: flex; align-items: center; gap: 6px; padding: 5px 10px; border: 1px solid var(--sp-border); border-radius: 14px; background: var(--sp-white); font-size: 12px; cursor: pointer; transition: all .15s; user-select: none; }
+  .remove-chip:hover { border-color: #c8c6c4; background: #f3f2f1; }
+  .remove-chip.removed { border-color: var(--sp-red); background: #fde7e9; color: var(--sp-red); text-decoration: line-through; }
+  .remove-chip input { position:absolute; opacity:0; width:0; height:0; pointer-events:none; }
+
+  /* BEBIDA SELECT */
+  .bebida-row { display: flex; flex-direction: column; gap: 8px; }
+  .bebida-opt { display: flex; align-items: center; gap: 10px; padding: 9px 14px; border: 1px solid var(--sp-border); border-radius: 2px; cursor: pointer; transition: background .1s, border-color .1s; user-select: none; }
+  .bebida-opt:hover { background: #faf9f8; border-color: #c8c6c4; }
+  .bebida-opt.selected { background: #eff6fc; border-color: var(--sp-blue); }
+  .bebida-opt input { width: 16px; height: 16px; accent-color: var(--sp-blue); cursor: pointer; flex-shrink:0; }
+
+  /* INDEPENDIENTES */
+  .indep-grid { display: flex; flex-direction: column; gap: 10px; }
+  .indep-item { border: 1px solid var(--sp-border); border-radius: 3px; overflow: hidden; }
+  .indep-item.disabled { opacity: .45; pointer-events: none; }
+  .indep-header { display: flex; align-items: center; gap: 12px; padding: 12px 16px; cursor: pointer; transition: background .1s; }
+  .indep-header:hover { background: #faf9f8; }
+  .indep-item.checked .indep-header { background: #eff6fc; border-bottom: 1px solid var(--sp-border); }
+  .indep-cb { width: 16px; height: 16px; accent-color: var(--sp-blue); flex-shrink:0; cursor:pointer; }
+  .indep-info { flex: 1; }
+  .indep-name { font-size: 14px; font-weight: 600; }
+  .indep-desc { font-size: 12px; color: var(--sp-text-secondary); margin-top: 2px; }
+  .indep-sub { padding: 10px 16px 14px 44px; background: #faf9f8; animation: fadeIn .2s ease; }
+  .indep-sub-label { font-size: 12px; font-weight: 600; color: var(--sp-blue); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 8px; }
+  .max-notice { font-size: 12px; color: var(--sp-text-secondary); background: #fff4ce; border: 1px solid #f5d76e; border-radius: 2px; padding: 6px 10px; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
   @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; } }
   .hidden { display: none !important; }
 
@@ -80,21 +112,21 @@
   .sp-summary-header { background: #f3f2f1; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; }
   .sp-summary-title { font-size: 13px; font-weight: 600; color: var(--sp-text); display: flex; align-items: center; gap: 6px; }
   .sp-summary-count { background: var(--sp-blue); color: #fff; font-size: 11px; font-weight: 700; border-radius: 10px; padding: 2px 8px; min-width: 20px; text-align: center; }
-  .sp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  .sp-table th { text-align: left; padding: 9px 14px; background: #faf9f8; font-weight: 600; font-size: 12px; color: var(--sp-text-secondary); border-bottom: 1px solid var(--sp-border); white-space: nowrap; }
-  .sp-table td { padding: 9px 14px; border-bottom: 1px solid var(--sp-border); vertical-align: middle; }
+  .sp-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .sp-table th { text-align: left; padding: 8px 12px; background: #faf9f8; font-weight: 600; font-size: 11px; color: var(--sp-text-secondary); border-bottom: 1px solid var(--sp-border); white-space: nowrap; }
+  .sp-table td { padding: 8px 12px; border-bottom: 1px solid var(--sp-border); vertical-align: middle; }
   .sp-table tr:last-child td { border-bottom: none; }
   .sp-table tr:hover td { background: #faf9f8; }
-  .sp-table .del-btn { background: none; border: none; cursor: pointer; color: #a19f9d; font-size: 16px; padding: 0 4px; transition: color .15s; }
-  .sp-table .del-btn:hover { color: var(--sp-red); }
+  .del-btn { background: none; border: none; cursor: pointer; color: #a19f9d; font-size: 15px; padding: 0 4px; transition: color .15s; }
+  .del-btn:hover { color: var(--sp-red); }
 
-  .sp-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; white-space: nowrap; }
-  .badge-hamb { background: #fff4ce; color: #7a5100; }
-  .badge-nugg { background: #dff6dd; color: #0b5a0b; }
-  .badge-beb  { background: #eff6fc; color: #004578; }
+  .sp-badge { display: inline-block; padding: 2px 7px; border-radius: 10px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .badge-combo { background: #fff4ce; color: #7a5100; }
+  .badge-indep { background: #dff6dd; color: #0b5a0b; }
+  .badge-beb   { background: #eff6fc; color: #004578; }
+  .badge-sin   { background: #fde7e9; color: var(--sp-red); font-size:10px; }
 
   .sp-empty { text-align: center; padding: 28px 16px; color: var(--sp-text-secondary); font-size: 13px; }
-
   .sp-export-bar { display: flex; justify-content: flex-end; padding: 10px 16px; border-top: 1px solid var(--sp-border); gap: 8px; flex-wrap: wrap; }
   .sp-btn-sm { background: transparent; color: var(--sp-blue); border: 1px solid var(--sp-border); border-radius: 2px; padding: 0 12px; height: 28px; font-size: 12px; font-family: inherit; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: background .15s; }
   .sp-btn-sm:hover { background: #faf9f8; }
@@ -103,10 +135,9 @@
 
   @media (max-width: 600px) {
     .sp-header { padding: 0 16px; }
-    .sp-main { margin: 14px auto; }
-    .sp-form-header, .sp-form-body { padding-left: 18px; padding-right: 18px; }
-    .sp-table { font-size: 11px; }
-    .sp-table th, .sp-table td { padding: 7px 8px; }
+    .sp-main { margin: 14px auto; padding: 0 10px 40px; }
+    .sp-form-header, .sp-form-body { padding-left: 16px; padding-right: 16px; }
+    .mode-btn .mode-label { font-size: 11px; }
   }
 </style>
 </head>
@@ -140,9 +171,7 @@
       Almuerzo Día del Alumno
     </div>
     <div class="sp-form-subtitle">2° Básico B</div>
-    <p class="sp-form-desc">
-      Complete este formulario para inscribir el almuerzo de su hijo/a. Seleccione el nombre del alumno, el menú y la bebida. Al finalizar, descargue la planilla Excel con todos los registros.
-    </p>
+    <p class="sp-form-desc">Complete este formulario para inscribir el pedido de su hijo/a. Elija entre un Combo McDonald's o productos individuales. Ambas opciones son excluyentes entre sí.</p>
     <div class="sp-required-note"><span>* </span>Los campos marcados son obligatorios.</div>
   </div>
 
@@ -152,9 +181,7 @@
     <div class="sp-section">
       <div class="sp-section-label">Datos del Apoderado / Responsable</div>
       <div class="sp-field">
-        <label class="sp-label" for="ingresado-por">
-          Nombre de quien ingresa <span class="sp-required-mark">*</span>
-        </label>
+        <label class="sp-label" for="ingresado-por">Nombre de quien ingresa <span class="sp-required-mark">*</span></label>
         <input class="sp-input" type="text" id="ingresado-por" placeholder="Ej: María González" autocomplete="name">
       </div>
     </div>
@@ -163,9 +190,7 @@
     <div class="sp-section">
       <div class="sp-section-label">Identificación del Alumno/a</div>
       <div class="sp-field">
-        <label class="sp-label" for="alumno">
-          Nombre del Alumno/a <span class="sp-required-mark">*</span>
-        </label>
+        <label class="sp-label" for="alumno">Nombre del Alumno/a <span class="sp-required-mark">*</span></label>
         <select class="sp-select" id="alumno">
           <option value="">— Seleccione un alumno —</option>
           <optgroup label="2° Básico B">
@@ -203,76 +228,159 @@
       </div>
     </div>
 
-    <!-- MENÚ -->
+    <!-- TIPO DE PEDIDO -->
     <div class="sp-section">
-      <div class="sp-section-label">Selección de Menú</div>
-      <div class="sp-field">
-        <div class="sp-label">Plato Principal <span class="sp-required-mark">*</span></div>
-        <div class="sp-choices">
-          <label class="sp-choice" onclick="selectChoice('principal','hamburguesa',this)">
-            <input type="radio" name="principal" value="hamburguesa">
-            <span class="sp-choice-icon">🍔</span>
-            <span class="sp-choice-text">Hamburguesa</span>
-          </label>
-          <label class="sp-choice" onclick="selectChoice('principal','nugget',this)">
-            <input type="radio" name="principal" value="nugget">
-            <span class="sp-choice-icon">🍗</span>
-            <span class="sp-choice-text">Nugget</span>
-          </label>
+      <div class="sp-section-label">Tipo de Pedido <span style="font-size:10px;font-weight:400;text-transform:none;letter-spacing:0">(elige una opción, son excluyentes)</span></div>
+
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="btn-combo" onclick="setMode('combo')">
+          <span class="mode-icon">🍔</span>
+          <span class="mode-label">Combo McDonald's</span>
+        </button>
+        <button class="mode-btn" id="btn-indep" onclick="setMode('indep')">
+          <span class="mode-icon">🧆</span>
+          <span class="mode-label">Opciones Individuales</span>
+        </button>
+      </div>
+
+      <!-- ══ COMBOS ══ -->
+      <div id="panel-combo">
+        <div class="sp-field">
+          <div class="sp-label">Selecciona tu Combo <span class="sp-required-mark">*</span></div>
+          <div class="combo-cards">
+
+            <!-- McNifica -->
+            <div class="combo-card" id="card-mcnifica" onclick="selectCombo('mcnifica')">
+              <div class="combo-card-header">
+                <input type="radio" class="combo-card-radio" name="combo" value="mcnifica" readonly>
+                <div>
+                  <div class="combo-card-title">🍔 Combo McNifica</div>
+                  <div class="combo-card-desc">Carne 100% vacuno, queso cheddar, tomate, lechuga, cebolla, ketchup, mostaza y mayonesa.</div>
+                  <span class="combo-card-tag">🍟 Papas &nbsp;|&nbsp; 🥤 Bebida incluida</span>
+                </div>
+              </div>
+              <div class="remove-section hidden" id="remove-mcnifica">
+                <div class="remove-title">¿Quitar algún ingrediente? (opcional)</div>
+                <div class="remove-chips">
+                  <label class="remove-chip" data-combo="mcnifica" data-ing="Queso cheddar"><input type="checkbox">🧀 Queso cheddar</label>
+                  <label class="remove-chip" data-combo="mcnifica" data-ing="Tomate"><input type="checkbox">🍅 Tomate</label>
+                  <label class="remove-chip" data-combo="mcnifica" data-ing="Lechuga"><input type="checkbox">🥬 Lechuga</label>
+                  <label class="remove-chip" data-combo="mcnifica" data-ing="Cebolla"><input type="checkbox">🧅 Cebolla</label>
+                  <label class="remove-chip" data-combo="mcnifica" data-ing="Ketchup"><input type="checkbox">🫙 Ketchup</label>
+                  <label class="remove-chip" data-combo="mcnifica" data-ing="Mostaza"><input type="checkbox">🫙 Mostaza</label>
+                  <label class="remove-chip" data-combo="mcnifica" data-ing="Mayonesa"><input type="checkbox">🫙 Mayonesa</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Cuarto de Libra -->
+            <div class="combo-card" id="card-cuarto" onclick="selectCombo('cuarto')">
+              <div class="combo-card-header">
+                <input type="radio" class="combo-card-radio" name="combo" value="cuarto" readonly>
+                <div>
+                  <div class="combo-card-title">🍔 Combo Cuarto de Libra con Queso</div>
+                  <div class="combo-card-desc">Carne 100% vacuno con doble queso cheddar, cebolla, ketchup, mostaza y pepinillos.</div>
+                  <span class="combo-card-tag">🍟 Papas &nbsp;|&nbsp; 🥤 Bebida incluida</span>
+                </div>
+              </div>
+              <div class="remove-section hidden" id="remove-cuarto">
+                <div class="remove-title">¿Quitar algún ingrediente? (opcional)</div>
+                <div class="remove-chips">
+                  <label class="remove-chip" data-combo="cuarto" data-ing="Queso cheddar"><input type="checkbox">🧀 Queso cheddar</label>
+                  <label class="remove-chip" data-combo="cuarto" data-ing="Cebolla"><input type="checkbox">🧅 Cebolla</label>
+                  <label class="remove-chip" data-combo="cuarto" data-ing="Ketchup"><input type="checkbox">🫙 Ketchup</label>
+                  <label class="remove-chip" data-combo="cuarto" data-ing="Mostaza"><input type="checkbox">🫙 Mostaza</label>
+                  <label class="remove-chip" data-combo="cuarto" data-ing="Pepinillos"><input type="checkbox">🥒 Pepinillos</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- McNuggets -->
+            <div class="combo-card" id="card-nuggets" onclick="selectCombo('nuggets')">
+              <div class="combo-card-header">
+                <input type="radio" class="combo-card-radio" name="combo" value="nuggets" readonly>
+                <div>
+                  <div class="combo-card-title">🍗 Combo Chicken McNuggets</div>
+                  <div class="combo-card-desc">10 Chicken McNuggets con 2 salsas a elección.</div>
+                  <span class="combo-card-tag">🍟 Papas &nbsp;|&nbsp; 🥤 Bebida incluida</span>
+                </div>
+              </div>
+              <div class="remove-section hidden" id="remove-nuggets">
+                <div class="remove-title">Selecciona tus 2 salsas (opcional)</div>
+                <div class="remove-chips" id="nuggets-salsas">
+                  <label class="remove-chip salsa-chip" data-salsa="BBQ"><input type="checkbox">🫙 BBQ</label>
+                  <label class="remove-chip salsa-chip" data-salsa="Honey Mustard"><input type="checkbox">🍯 Honey Mustard</label>
+                  <label class="remove-chip salsa-chip" data-salsa="Sweet & Sour"><input type="checkbox">🍬 Sweet &amp; Sour</label>
+                  <label class="remove-chip salsa-chip" data-salsa="Ketchup"><input type="checkbox">🫙 Ketchup</label>
+                  <label class="remove-chip salsa-chip" data-salsa="Mayonesa"><input type="checkbox">🫙 Mayonesa</label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- BEBIDA COMBO -->
+        <div class="sp-field" id="bebida-combo-field">
+          <div class="sp-label">Bebida del Combo <span class="sp-required-mark">*</span></div>
+          <div class="bebida-row" id="bebida-combo-opts">
+            <label class="bebida-opt" onclick="selectBebida('combo','coca',this)"><input type="radio" name="bebida-combo" value="coca">🥤 Coca Cola Zero</label>
+            <label class="bebida-opt" onclick="selectBebida('combo','fanta',this)"><input type="radio" name="bebida-combo" value="fanta">🍊 Fanta Zero</label>
+            <label class="bebida-opt" onclick="selectBebida('combo','sprite',this)"><input type="radio" name="bebida-combo" value="sprite">💚 Sprite Zero</label>
+          </div>
         </div>
       </div>
 
-      <div class="sp-subsection hidden" id="subsec-hamburguesa">
-        <div class="sp-subsection-label">¿Cómo la quiere?</div>
-        <div class="sp-choices" id="hamb-choices">
-          <label class="sp-choice" onclick="selectChoice('tipohamb','sola',this)">
-            <input type="radio" name="tipohamb" value="sola">
-            <span class="sp-choice-icon">🍔</span>
-            <span class="sp-choice-text">Hamburguesa Sola</span>
-          </label>
-          <label class="sp-choice" onclick="selectChoice('tipohamb','palta',this)">
-            <input type="radio" name="tipohamb" value="palta">
-            <span class="sp-choice-icon">🥑</span>
-            <span class="sp-choice-text">Hamburguesa con Palta</span>
-          </label>
-          <label class="sp-choice" onclick="selectChoice('tipohamb','mcfiesta',this)">
-            <input type="radio" name="tipohamb" value="mcfiesta">
-            <span class="sp-choice-icon">🎉</span>
-            <span class="sp-choice-text">McFiesta</span>
-          </label>
-        </div>
-      </div>
-    </div>
+      <!-- ══ INDEPENDIENTES ══ -->
+      <div id="panel-indep" class="hidden">
+        <div class="max-notice">⚠️ Puedes seleccionar máximo 3 productos: Empanadas, Papas Fritas y/o Bebida. Debes elegir al menos uno.</div>
+        <div class="indep-grid">
 
-    <!-- BEBIDA -->
-    <div class="sp-section">
-      <div class="sp-section-label">Bebestible</div>
-      <div class="sp-field">
-        <div class="sp-label">Bebida <span class="sp-required-mark">*</span></div>
-        <div class="sp-choices">
-          <label class="sp-choice" onclick="selectChoice('bebida','coca-zero',this)">
-            <input type="radio" name="bebida" value="coca-zero">
-            <span class="sp-choice-icon">🥤</span>
-            <span class="sp-choice-text">Coca Cola Zero</span>
-          </label>
-          <label class="sp-choice" onclick="selectChoice('bebida','fanta-zero',this)">
-            <input type="radio" name="bebida" value="fanta-zero">
-            <span class="sp-choice-icon">🍊</span>
-            <span class="sp-choice-text">Fanta Zero</span>
-          </label>
-          <label class="sp-choice" onclick="selectChoice('bebida','sprite-zero',this)">
-            <input type="radio" name="bebida" value="sprite-zero">
-            <span class="sp-choice-icon">💚</span>
-            <span class="sp-choice-text">Sprite Zero</span>
-          </label>
-          <label class="sp-choice" onclick="selectChoice('bebida','jugo-manzana',this)">
-            <input type="radio" name="bebida" value="jugo-manzana">
-            <span class="sp-choice-icon">🍎</span>
-            <span class="sp-choice-text">Jugo de Manzana</span>
-          </label>
+          <!-- Empanadas -->
+          <div class="indep-item" id="item-empanadas">
+            <div class="indep-header" onclick="toggleIndep('empanadas')">
+              <input type="checkbox" class="indep-cb" id="cb-empanadas" onclick="event.stopPropagation();toggleIndep('empanadas')">
+              <div class="indep-info">
+                <div class="indep-name">🧆 Empanadas</div>
+                <div class="indep-desc">Porción de 3 empanadas de queso</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Papas Fritas -->
+          <div class="indep-item" id="item-papas">
+            <div class="indep-header" onclick="toggleIndep('papas')">
+              <input type="checkbox" class="indep-cb" id="cb-papas" onclick="event.stopPropagation();toggleIndep('papas')">
+              <div class="indep-info">
+                <div class="indep-name">🍟 Papas Fritas</div>
+                <div class="indep-desc">Porción de papas medianas</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bebida -->
+          <div class="indep-item" id="item-bebida-indep">
+            <div class="indep-header" onclick="toggleIndep('bebida-indep')">
+              <input type="checkbox" class="indep-cb" id="cb-bebida-indep" onclick="event.stopPropagation();toggleIndep('bebida-indep')">
+              <div class="indep-info">
+                <div class="indep-name">🥤 Vaso de Bebida Mediano</div>
+                <div class="indep-desc">Selecciona la bebida de tu preferencia</div>
+              </div>
+            </div>
+            <div class="indep-sub hidden" id="sub-bebida-indep">
+              <div class="indep-sub-label">¿Qué bebida?</div>
+              <div class="bebida-row">
+                <label class="bebida-opt" onclick="selectBebida('indep','coca',this)"><input type="radio" name="bebida-indep" value="coca">🥤 Coca Cola Zero</label>
+                <label class="bebida-opt" onclick="selectBebida('indep','fanta',this)"><input type="radio" name="bebida-indep" value="fanta">🍊 Fanta Zero</label>
+                <label class="bebida-opt" onclick="selectBebida('indep','sprite',this)"><input type="radio" name="bebida-indep" value="sprite">💚 Sprite Zero</label>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
-    </div>
+
+    </div><!-- /sp-section pedido -->
 
     <div class="sp-actions">
       <button class="sp-btn-primary" onclick="submitForm()">
@@ -282,28 +390,19 @@
       <button class="sp-btn-secondary" onclick="resetForm()">Limpiar</button>
     </div>
 
-  </div>
+  </div><!-- /form-body -->
 
   <!-- RESUMEN -->
   <div class="sp-summary">
     <div class="sp-summary-header">
-      <div class="sp-summary-title">
-        📋 Respuestas ingresadas
-        <span class="sp-summary-count" id="resp-count">0</span>
-      </div>
+      <div class="sp-summary-title">📋 Respuestas ingresadas <span class="sp-summary-count" id="resp-count">0</span></div>
     </div>
     <div id="resp-empty" class="sp-empty">No hay respuestas registradas aún.</div>
     <div style="overflow-x:auto;">
       <table class="sp-table hidden" id="resp-table">
         <thead>
           <tr>
-            <th>#</th>
-            <th>Alumno/a</th>
-            <th>Plato</th>
-            <th>Bebida</th>
-            <th>Ingresado por</th>
-            <th>Fecha / Hora</th>
-            <th></th>
+            <th>#</th><th>Alumno/a</th><th>Pedido</th><th>Detalle</th><th>Bebida</th><th>Ingresado por</th><th>Fecha/Hora</th><th></th>
           </tr>
         </thead>
         <tbody id="resp-tbody"></tbody>
@@ -311,12 +410,7 @@
     </div>
     <div class="sp-export-bar hidden" id="export-bar">
       <button class="sp-btn-sm excel" onclick="exportExcel()">
-        <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-          <rect x="1" y="1" width="11" height="11" rx="1" stroke="#107c10" stroke-width="1.2" fill="#dff6dd"/>
-          <path d="M3.5 4.5L5.5 8.5M7.5 4.5L5.5 8.5" stroke="#107c10" stroke-width="1.2" stroke-linecap="round"/>
-          <path d="M8 4.5h2v4H8" stroke="#107c10" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M8 6.5h1.5" stroke="#107c10" stroke-width="1.2" stroke-linecap="round"/>
-        </svg>
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="1" y="1" width="11" height="11" rx="1" stroke="#107c10" stroke-width="1.2" fill="#dff6dd"/><path d="M3.5 4.5L5.5 8.5M7.5 4.5L5.5 8.5" stroke="#107c10" stroke-width="1.2" stroke-linecap="round"/><path d="M8 4.5h2v4H8" stroke="#107c10" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 6.5h1.5" stroke="#107c10" stroke-width="1.2" stroke-linecap="round"/></svg>
         Descargar Excel (.xlsx)
       </button>
       <button class="sp-btn-sm" onclick="window.print()">
@@ -334,27 +428,109 @@
 </div>
 
 <script>
+  // ── STATE ──
+  let mode = 'combo'; // 'combo' | 'indep'
+  let selectedCombo = null;
+  const removedIngredients = { mcnifica: new Set(), cuarto: new Set() };
+  const selectedSalsas = new Set();
+  let bebidaCombo = null;
+  const indepChecked = { empanadas: false, papas: false, 'bebida-indep': false };
+  let bebidaIndep = null;
   const responses = [];
-  const state = { principal: null, tipohamb: null, bebida: null };
 
-  function selectChoice(group, value, el) {
-    state[group] = value;
-    el.closest('.sp-choices').querySelectorAll('.sp-choice').forEach(c => c.classList.remove('selected'));
-    el.classList.add('selected');
-    el.querySelector('input[type=radio]').checked = true;
-    if (group === 'principal') {
-      const sub = document.getElementById('subsec-hamburguesa');
-      if (value === 'hamburguesa') {
-        sub.classList.remove('hidden');
+  const BEBIDA_LABELS = { coca: 'Coca Cola Zero', fanta: 'Fanta Zero', sprite: 'Sprite Zero' };
+  const COMBO_LABELS = { mcnifica: 'Combo McNifica', cuarto: 'Combo Cuarto de Libra con Queso', nuggets: 'Combo Chicken McNuggets' };
+
+  // ── MODE ──
+  function setMode(m) {
+    mode = m;
+    document.getElementById('btn-combo').classList.toggle('active', m === 'combo');
+    document.getElementById('btn-indep').classList.toggle('active', m === 'indep');
+    document.getElementById('panel-combo').classList.toggle('hidden', m !== 'combo');
+    document.getElementById('panel-indep').classList.toggle('hidden', m !== 'indep');
+  }
+
+  // ── COMBO ──
+  function selectCombo(name) {
+    selectedCombo = name;
+    ['mcnifica','cuarto','nuggets'].forEach(c => {
+      const card = document.getElementById('card-' + c);
+      const rem  = document.getElementById('remove-' + c);
+      card.classList.toggle('selected', c === name);
+      card.querySelector('input[type=radio]').checked = (c === name);
+      rem.classList.toggle('hidden', c !== name);
+    });
+  }
+
+  // Ingredient & salsa chips — driven by click on label, no double-fire
+  document.addEventListener('click', function(e) {
+    const chip = e.target.closest('.remove-chip');
+    if (!chip) return;
+
+    // Ingredient chip
+    if (chip.dataset.ing) {
+      e.preventDefault();
+      const combo = chip.dataset.combo;
+      const ing   = chip.dataset.ing;
+      const set   = removedIngredients[combo];
+      const cb    = chip.querySelector('input');
+      if (set.has(ing)) {
+        set.delete(ing);
+        chip.classList.remove('removed');
+        if (cb) cb.checked = false;
       } else {
-        sub.classList.add('hidden');
-        state.tipohamb = null;
-        document.querySelectorAll('[name="tipohamb"]').forEach(r => r.checked = false);
-        document.getElementById('hamb-choices').querySelectorAll('.sp-choice').forEach(c => c.classList.remove('selected'));
+        set.add(ing);
+        chip.classList.add('removed');
+        if (cb) cb.checked = true;
       }
+    }
+
+    // Salsa chip
+    if (chip.dataset.salsa) {
+      e.preventDefault();
+      const salsa = chip.dataset.salsa;
+      const cb    = chip.querySelector('input');
+      if (selectedSalsas.has(salsa)) {
+        selectedSalsas.delete(salsa);
+        chip.classList.remove('removed');
+        chip.style.borderColor = ''; chip.style.background = ''; chip.style.color = '';
+        if (cb) cb.checked = false;
+      } else {
+        if (selectedSalsas.size >= 2) { showToast('⚠ Solo puedes elegir 2 salsas', true); return; }
+        selectedSalsas.add(salsa);
+        chip.style.borderColor = 'var(--sp-blue)'; chip.style.background = '#eff6fc'; chip.style.color = 'var(--sp-blue)';
+        if (cb) cb.checked = true;
+      }
+    }
+  });
+
+  function selectBebida(type, val, el) {
+    if (type === 'combo') {
+      bebidaCombo = val;
+      document.querySelectorAll('#bebida-combo-opts .bebida-opt').forEach(o => o.classList.remove('selected'));
+    } else {
+      bebidaIndep = val;
+      document.querySelectorAll('#sub-bebida-indep .bebida-opt').forEach(o => o.classList.remove('selected'));
+    }
+    el.classList.add('selected');
+    el.querySelector('input').checked = true;
+  }
+
+  // ── INDEPENDIENTES ──
+  function toggleIndep(key) {
+    indepChecked[key] = !indepChecked[key];
+    const cb   = document.getElementById('cb-' + key);
+    const item = document.getElementById('item-' + key);
+    cb.checked = indepChecked[key];
+    item.classList.toggle('checked', indepChecked[key]);
+    if (key === 'bebida-indep') {
+      const sub = document.getElementById('sub-bebida-indep');
+      sub.classList.toggle('hidden', !indepChecked[key]);
+      if (!indepChecked[key]) bebidaIndep = null;
     }
   }
 
+  // ── TOAST ──
   function showToast(msg, isError = false) {
     const t = document.getElementById('toast');
     document.getElementById('toast-msg').textContent = msg;
@@ -367,105 +543,134 @@
     return new Date().toLocaleString('es-CL', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
   }
 
+  // ── SUBMIT ──
   function submitForm() {
     const ingresadoPor = document.getElementById('ingresado-por').value.trim();
     const alumno = document.getElementById('alumno').value;
-    if (!ingresadoPor)  { showToast('⚠ Ingresa tu nombre', true); return; }
-    if (!alumno)        { showToast('⚠ Selecciona un alumno', true); return; }
-    if (!state.principal) { showToast('⚠ Selecciona el plato principal', true); return; }
-    if (state.principal === 'hamburguesa' && !state.tipohamb) { showToast('⚠ Selecciona el tipo de hamburguesa', true); return; }
-    if (!state.bebida)  { showToast('⚠ Selecciona una bebida', true); return; }
+    if (!ingresadoPor) { showToast('⚠ Ingresa tu nombre', true); return; }
+    if (!alumno)       { showToast('⚠ Selecciona un alumno', true); return; }
 
-    const platoMap = { sola:'Hamburguesa Sola', palta:'Hamburguesa con Palta', mcfiesta:'McFiesta' };
-    const plato = state.principal === 'hamburguesa' ? platoMap[state.tipohamb] : 'Nugget';
-    const bebidaMap = { 'coca-zero':'Coca Cola Zero', 'fanta-zero':'Fanta Zero', 'sprite-zero':'Sprite Zero', 'jugo-manzana':'Jugo de Manzana' };
+    let pedido = '', detalle = '', bebida = '';
 
-    responses.push({ alumno, plato, bebida: bebidaMap[state.bebida], ingresadoPor, fecha: nowStr() });
+    if (mode === 'combo') {
+      if (!selectedCombo) { showToast('⚠ Selecciona un combo', true); return; }
+      if (!bebidaCombo)   { showToast('⚠ Selecciona la bebida del combo', true); return; }
+
+      pedido = COMBO_LABELS[selectedCombo];
+      bebida = BEBIDA_LABELS[bebidaCombo];
+
+      if (selectedCombo === 'nuggets') {
+        detalle = selectedSalsas.size > 0 ? 'Salsas: ' + [...selectedSalsas].join(', ') : 'Sin salsa especificada';
+      } else {
+        const rem = removedIngredients[selectedCombo];
+        detalle = rem.size > 0 ? 'Sin: ' + [...rem].join(', ') : 'Sin modificaciones';
+      }
+
+    } else {
+      const chosen = Object.entries(indepChecked).filter(([,v]) => v).map(([k]) => k);
+      if (chosen.length === 0) { showToast('⚠ Selecciona al menos un producto', true); return; }
+      if (indepChecked['bebida-indep'] && !bebidaIndep) { showToast('⚠ Selecciona qué bebida quieres', true); return; }
+
+      const labels = { empanadas:'Empanadas (x3)', papas:'Papas Fritas', 'bebida-indep':'Bebida' };
+      pedido = chosen.map(k => labels[k]).join(' + ');
+      bebida = bebidaIndep ? BEBIDA_LABELS[bebidaIndep] : '—';
+      detalle = '—';
+    }
+
+    responses.push({ alumno, pedido, detalle, bebida, ingresadoPor, fecha: nowStr() });
     renderTable();
     showToast(`✓ ${alumno.split(' ')[0]} registrado/a`);
-    // Keep ingresado-por name for next entry; only reset menu choices
+
+    // Reset menú pero mantiene nombre ingresador
     document.getElementById('alumno').value = '';
-    state.principal = null; state.tipohamb = null; state.bebida = null;
-    document.querySelectorAll('.sp-choice').forEach(c => c.classList.remove('selected'));
-    document.querySelectorAll('input[type=radio]').forEach(r => r.checked = false);
-    document.getElementById('subsec-hamburguesa').classList.add('hidden');
+    resetMenuOnly();
+  }
+
+  function resetMenuOnly() {
+    selectedCombo = null; bebidaCombo = null; bebidaIndep = null;
+    removedIngredients.mcnifica.clear(); removedIngredients.cuarto.clear();
+    selectedSalsas.clear();
+    Object.keys(indepChecked).forEach(k => indepChecked[k] = false);
+    document.querySelectorAll('.combo-card').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('.combo-card input[type=radio]').forEach(r => r.checked = false);
+    document.querySelectorAll('.remove-section').forEach(s => s.classList.add('hidden'));
+    document.querySelectorAll('.remove-chip').forEach(c => { c.classList.remove('removed'); c.style.borderColor=''; c.style.background=''; c.style.color=''; const cb=c.querySelector('input[type=checkbox]'); if(cb) cb.checked=false; });
+    document.querySelectorAll('.bebida-opt').forEach(o => { o.classList.remove('selected'); if(o.querySelector('input')) o.querySelector('input').checked=false; });
+    document.querySelectorAll('.indep-item').forEach(i => i.classList.remove('checked'));
+    document.querySelectorAll('.indep-cb').forEach(cb => cb.checked = false);
+    document.getElementById('sub-bebida-indep').classList.add('hidden');
+    setMode('combo');
   }
 
   function resetForm() {
     document.getElementById('ingresado-por').value = '';
     document.getElementById('alumno').value = '';
-    state.principal = null; state.tipohamb = null; state.bebida = null;
-    document.querySelectorAll('.sp-choice').forEach(c => c.classList.remove('selected'));
-    document.querySelectorAll('input[type=radio]').forEach(r => r.checked = false);
-    document.getElementById('subsec-hamburguesa').classList.add('hidden');
+    resetMenuOnly();
   }
 
+  // ── TABLE ──
   function renderTable() {
     const count = responses.length;
     document.getElementById('resp-count').textContent = count;
-    const empty = document.getElementById('resp-empty');
-    const table = document.getElementById('resp-table');
-    const bar   = document.getElementById('export-bar');
-    empty.classList.toggle('hidden', count > 0);
-    table.classList.toggle('hidden', count === 0);
-    bar.classList.toggle('hidden', count === 0);
+    document.getElementById('resp-empty').classList.toggle('hidden', count > 0);
+    document.getElementById('resp-table').classList.toggle('hidden', count === 0);
+    document.getElementById('export-bar').classList.toggle('hidden', count === 0);
 
     document.getElementById('resp-tbody').innerHTML = responses.map((r, i) => {
-      const badge = r.plato === 'Nugget' ? 'badge-nugg' : 'badge-hamb';
+      const isCombo = r.pedido.startsWith('Combo');
+      const badgeCls = isCombo ? 'badge-combo' : 'badge-indep';
       return `<tr>
-        <td style="color:#a19f9d;font-size:12px">${i+1}</td>
+        <td style="color:#a19f9d">${i+1}</td>
         <td><strong>${r.alumno}</strong></td>
-        <td><span class="sp-badge ${badge}">${r.plato}</span></td>
+        <td><span class="sp-badge ${badgeCls}">${r.pedido}</span></td>
+        <td style="color:var(--sp-text-secondary);font-size:11px">${r.detalle}</td>
         <td><span class="sp-badge badge-beb">${r.bebida}</span></td>
         <td style="color:var(--sp-text-secondary)">${r.ingresadoPor}</td>
-        <td style="color:var(--sp-text-secondary);font-size:12px;white-space:nowrap">${r.fecha}</td>
-        <td><button class="del-btn" onclick="deleteRow(${i})" title="Eliminar">✕</button></td>
+        <td style="color:var(--sp-text-secondary);white-space:nowrap">${r.fecha}</td>
+        <td><button class="del-btn" onclick="deleteRow(${i})">✕</button></td>
       </tr>`;
     }).join('');
   }
 
   function deleteRow(i) { responses.splice(i, 1); renderTable(); }
 
+  // ── EXCEL ──
   function exportExcel() {
     if (!responses.length) return;
     const wb = XLSX.utils.book_new();
 
-    /* ─── Hoja 1: Inscripciones ─── */
+    // Hoja inscripciones
     const rows = [
       ['Almuerzo Día del Alumno – 2° Básico B'],
       ['Generado: ' + nowStr()],
       [],
-      ['N°', 'Alumno/a', 'Plato Principal', 'Bebida', 'Ingresado por', 'Fecha y Hora'],
-      ...responses.map((r, i) => [i + 1, r.alumno, r.plato, r.bebida, r.ingresadoPor, r.fecha])
+      ['N°','Alumno/a','Pedido','Detalle / Modificaciones','Bebida','Ingresado por','Fecha y Hora'],
+      ...responses.map((r,i) => [i+1, r.alumno, r.pedido, r.detalle, r.bebida, r.ingresadoPor, r.fecha])
     ];
     const ws1 = XLSX.utils.aoa_to_sheet(rows);
-    ws1['!cols'] = [{ wch: 5 }, { wch: 36 }, { wch: 24 }, { wch: 18 }, { wch: 28 }, { wch: 20 }];
-    ws1['!merges'] = [
-      { s: { r: 0, c: 0 }, e: { r: 0, c: 5 } },
-      { s: { r: 1, c: 0 }, e: { r: 1, c: 5 } }
-    ];
+    ws1['!cols'] = [{wch:4},{wch:36},{wch:30},{wch:36},{wch:18},{wch:28},{wch:20}];
+    ws1['!merges'] = [{s:{r:0,c:0},e:{r:0,c:6}},{s:{r:1,c:0},e:{r:1,c:6}}];
     XLSX.utils.book_append_sheet(wb, ws1, 'Inscripciones');
 
-    /* ─── Hoja 2: Resumen ─── */
-    const counts = {};
-    responses.forEach(r => { counts[r.plato] = (counts[r.plato] || 0) + 1; });
-    const counts2 = {};
-    responses.forEach(r => { counts2[r.bebida] = (counts2[r.bebida] || 0) + 1; });
-
+    // Hoja resumen
+    const cPedido = {}, cBebida = {};
+    responses.forEach(r => {
+      cPedido[r.pedido] = (cPedido[r.pedido]||0)+1;
+      if (r.bebida !== '—') cBebida[r.bebida] = (cBebida[r.bebida]||0)+1;
+    });
     const sum = [
       ['Resumen – Almuerzo Día del Alumno 2° Básico B'],
       [],
-      ['PLATO', 'CANTIDAD'],
-      ...Object.entries(counts).map(([k, v]) => [k, v]),
+      ['PEDIDO','CANTIDAD'],
+      ...Object.entries(cPedido).map(([k,v])=>[k,v]),
       ['TOTAL', responses.length],
       [],
-      ['BEBIDA', 'CANTIDAD'],
-      ...Object.entries(counts2).map(([k, v]) => [k, v]),
-      ['TOTAL', responses.length]
+      ['BEBIDA','CANTIDAD'],
+      ...Object.entries(cBebida).map(([k,v])=>[k,v])
     ];
     const ws2 = XLSX.utils.aoa_to_sheet(sum);
-    ws2['!cols'] = [{ wch: 30 }, { wch: 12 }];
-    ws2['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 1 } }];
+    ws2['!cols'] = [{wch:36},{wch:12}];
+    ws2['!merges'] = [{s:{r:0,c:0},e:{r:0,c:1}}];
     XLSX.utils.book_append_sheet(wb, ws2, 'Resumen');
 
     XLSX.writeFile(wb, 'Almuerzo_DiadelAlumno_2B.xlsx');
