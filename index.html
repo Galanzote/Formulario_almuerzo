@@ -652,7 +652,7 @@
       ['Almuerzo Día del Alumno – 2° Básico B'],
       ['Generado: ' + nowStr()],
       [],
-      ['N°','Alumno/a','Pedido','Detalle / Modificaciones','Bebida','Ingresado por','Fecha y Hora'],
+      ['N°','Alumno/a','Pedido','Detalle / Modificaciones','Bebida','Ingresado por','Fecha y Hora','Precio'],
       ...responses.map((r,i) => [i+1, r.alumno, r.pedido, r.detalle, r.bebida, r.ingresadoPor, r.fecha, formatPeso(r.precio)])
     ];
     const ws1 = XLSX.utils.aoa_to_sheet(rows);
