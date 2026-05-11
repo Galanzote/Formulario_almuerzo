@@ -318,6 +318,7 @@
             <label class="bebida-opt" onclick="selectBebida('combo','coca',this)"><input type="radio" name="bebida-combo" value="coca">🥤 Coca Cola Zero</label>
             <label class="bebida-opt" onclick="selectBebida('combo','fanta',this)"><input type="radio" name="bebida-combo" value="fanta">🍊 Fanta Zero</label>
             <label class="bebida-opt" onclick="selectBebida('combo','sprite',this)"><input type="radio" name="bebida-combo" value="sprite">💚 Sprite Zero</label>
+            <label class="bebida-opt" onclick="selectBebida('combo','cocanormal',this)"><input type="radio" name="bebida-combo" value="cocanormal">🥤 Coca Cola Normal</label>
           </div>
         </div>
       </div>
@@ -364,6 +365,7 @@
                 <label class="bebida-opt" onclick="selectBebida('indep','coca',this)"><input type="radio" name="bebida-indep" value="coca">🥤 Coca Cola Zero</label>
                 <label class="bebida-opt" onclick="selectBebida('indep','fanta',this)"><input type="radio" name="bebida-indep" value="fanta">🍊 Fanta Zero</label>
                 <label class="bebida-opt" onclick="selectBebida('indep','sprite',this)"><input type="radio" name="bebida-indep" value="sprite">💚 Sprite Zero</label>
+                <label class="bebida-opt" onclick="selectBebida('indep','cocanormal',this)"><input type="radio" name="bebida-indep" value="cocanormal">🥤 Coca Cola Normal</label>
               </div>
             </div>
           </div>
@@ -428,7 +430,7 @@
   let bebidaIndep = null;
   const responses = [];
 
-  const BEBIDA_LABELS = { coca: 'Coca Cola Zero', fanta: 'Fanta Zero', sprite: 'Sprite Zero' };
+  const BEBIDA_LABELS = { coca: 'Coca Cola Zero', fanta: 'Fanta Zero', sprite: 'Sprite Zero', cocanormal: 'Coca Cola Normal' };
   const COMBO_LABELS = { mcnifica: 'Combo McNifica', cuarto: 'Combo Cuarto de Libra con Queso', nuggets: 'Combo Chicken McNuggets' };
 
   const PRECIOS = {
