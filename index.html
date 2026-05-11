@@ -301,20 +301,11 @@
                 <input type="radio" class="combo-card-radio" name="combo" value="nuggets" readonly>
                 <div>
                   <div class="combo-card-title">🍗 Combo Chicken McNuggets</div>
-                  <div class="combo-card-desc">10 Chicken McNuggets con 2 salsas a elección.</div>
+                  <div class="combo-card-desc">10 Chicken McNuggets.</div>
                   <span class="combo-card-tag">🍟 Papas &nbsp;|&nbsp; 🥤 Bebida incluida</span>
                 </div>
               </div>
-              <div class="remove-section hidden" id="remove-nuggets">
-                <div class="remove-title">Selecciona tus 2 salsas (opcional)</div>
-                <div class="remove-chips" id="nuggets-salsas">
-                  <label class="remove-chip salsa-chip" data-salsa="BBQ"><input type="checkbox">🫙 BBQ</label>
-                  <label class="remove-chip salsa-chip" data-salsa="Honey Mustard"><input type="checkbox">🍯 Honey Mustard</label>
-                  <label class="remove-chip salsa-chip" data-salsa="Sweet & Sour"><input type="checkbox">🍬 Sweet &amp; Sour</label>
-                  <label class="remove-chip salsa-chip" data-salsa="Ketchup"><input type="checkbox">🫙 Ketchup</label>
-                  <label class="remove-chip salsa-chip" data-salsa="Mayonesa"><input type="checkbox">🫙 Mayonesa</label>
-                </div>
-              </div>
+
             </div>
 
           </div>
@@ -353,7 +344,7 @@
               <input type="checkbox" class="indep-cb" id="cb-papas" onclick="event.stopPropagation();toggleIndep('papas')">
               <div class="indep-info">
                 <div class="indep-name">🍟 Papas Fritas</div>
-                <div class="indep-desc">Porción de papas medianas</div>
+                <div class="indep-desc">Porción de papas grandes</div>
               </div>
             </div>
           </div>
@@ -432,7 +423,6 @@
   let mode = 'combo'; // 'combo' | 'indep'
   let selectedCombo = null;
   const removedIngredients = { mcnifica: new Set(), cuarto: new Set() };
-  const selectedSalsas = new Set();
   let bebidaCombo = null;
   const indepChecked = { empanadas: false, papas: false, 'bebida-indep': false };
   let bebidaIndep = null;
@@ -440,6 +430,30 @@
 
   const BEBIDA_LABELS = { coca: 'Coca Cola Zero', fanta: 'Fanta Zero', sprite: 'Sprite Zero' };
   const COMBO_LABELS = { mcnifica: 'Combo McNifica', cuarto: 'Combo Cuarto de Libra con Queso', nuggets: 'Combo Chicken McNuggets' };
+
+  const PRECIOS = {
+    'Combo McNifica': 6990,
+    'Combo Cuarto de Libra con Queso': 6790,
+    'Combo Chicken McNuggets': 7390,
+    'Empanadas (x3)': 2290,
+    'Papas Fritas': 2190,
+    'Bebida': 1890
+  };
+
+  function calcPrecio(pedido) {
+    // Combo - precio directo
+    if (PRECIOS[pedido]) return PRECIOS[pedido];
+    // Independientes - suma por item
+    let total = 0;
+    if (pedido.includes('Empanadas')) total += PRECIOS['Empanadas (x3)'];
+    if (pedido.includes('Papas'))     total += PRECIOS['Papas Fritas'];
+    if (pedido.includes('Bebida'))    total += PRECIOS['Bebida'];
+    return total;
+  }
+
+  function formatPeso(n) {
+    return '$ ' + n.toLocaleString('es-CL');
+  }
 
   // ── MODE ──
   function setMode(m) {
@@ -485,23 +499,6 @@
       }
     }
 
-    // Salsa chip
-    if (chip.dataset.salsa) {
-      e.preventDefault();
-      const salsa = chip.dataset.salsa;
-      const cb    = chip.querySelector('input');
-      if (selectedSalsas.has(salsa)) {
-        selectedSalsas.delete(salsa);
-        chip.classList.remove('removed');
-        chip.style.borderColor = ''; chip.style.background = ''; chip.style.color = '';
-        if (cb) cb.checked = false;
-      } else {
-        if (selectedSalsas.size >= 2) { showToast('⚠ Solo puedes elegir 2 salsas', true); return; }
-        selectedSalsas.add(salsa);
-        chip.style.borderColor = 'var(--sp-blue)'; chip.style.background = '#eff6fc'; chip.style.color = 'var(--sp-blue)';
-        if (cb) cb.checked = true;
-      }
-    }
   });
 
   function selectBebida(type, val, el) {
@@ -560,7 +557,7 @@
       bebida = BEBIDA_LABELS[bebidaCombo];
 
       if (selectedCombo === 'nuggets') {
-        detalle = selectedSalsas.size > 0 ? 'Salsas: ' + [...selectedSalsas].join(', ') : 'Sin salsa especificada';
+        detalle = '—';
       } else {
         const rem = removedIngredients[selectedCombo];
         detalle = rem.size > 0 ? 'Sin: ' + [...rem].join(', ') : 'Sin modificaciones';
@@ -577,7 +574,8 @@
       detalle = '—';
     }
 
-    const entry = { alumno, pedido, detalle, bebida, ingresadoPor, fecha: nowStr() };
+    const precio = calcPrecio(pedido);
+    const entry = { alumno, pedido, detalle, bebida, ingresadoPor, fecha: nowStr(), precio };
     responses.push(entry);
     renderTable();
 
@@ -587,7 +585,7 @@
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(entry)
+      body: JSON.stringify({...entry, precio: formatPeso(entry.precio)})
     })
     .then(() => showToast(`✓ ${entry.alumno.split(' ')[0]} guardado/a en la planilla`))
     .catch(() => showToast('⚠ No se pudo conectar con la planilla. Datos guardados solo localmente.', true));
@@ -600,7 +598,6 @@
   function resetMenuOnly() {
     selectedCombo = null; bebidaCombo = null; bebidaIndep = null;
     removedIngredients.mcnifica.clear(); removedIngredients.cuarto.clear();
-    selectedSalsas.clear();
     Object.keys(indepChecked).forEach(k => indepChecked[k] = false);
     document.querySelectorAll('.combo-card').forEach(c => c.classList.remove('selected'));
     document.querySelectorAll('.combo-card input[type=radio]').forEach(r => r.checked = false);
@@ -656,11 +653,14 @@
       ['Generado: ' + nowStr()],
       [],
       ['N°','Alumno/a','Pedido','Detalle / Modificaciones','Bebida','Ingresado por','Fecha y Hora'],
-      ...responses.map((r,i) => [i+1, r.alumno, r.pedido, r.detalle, r.bebida, r.ingresadoPor, r.fecha])
+      ...responses.map((r,i) => [i+1, r.alumno, r.pedido, r.detalle, r.bebida, r.ingresadoPor, r.fecha, formatPeso(r.precio)])
     ];
     const ws1 = XLSX.utils.aoa_to_sheet(rows);
-    ws1['!cols'] = [{wch:4},{wch:36},{wch:30},{wch:36},{wch:18},{wch:28},{wch:20}];
-    ws1['!merges'] = [{s:{r:0,c:0},e:{r:0,c:6}},{s:{r:1,c:0},e:{r:1,c:6}}];
+    ws1['!cols'] = [{wch:4},{wch:36},{wch:30},{wch:36},{wch:18},{wch:28},{wch:20},{wch:14}];
+    ws1['!merges'] = [{s:{r:0,c:0},e:{r:0,c:7}},{s:{r:1,c:0},e:{r:1,c:7}}];
+    // Total row
+    const totalRow = ['', '', '', '', '', '', 'TOTAL', formatPeso(responses.reduce((s,r) => s + r.precio, 0))];
+    XLSX.utils.sheet_add_aoa(ws1, [totalRow], {origin: -1});
     XLSX.utils.book_append_sheet(wb, ws1, 'Inscripciones');
 
     // Hoja resumen
@@ -674,7 +674,9 @@
       [],
       ['PEDIDO','CANTIDAD'],
       ...Object.entries(cPedido).map(([k,v])=>[k,v]),
-      ['TOTAL', responses.length],
+      ['TOTAL PEDIDOS', responses.length],
+      [],
+      ['TOTAL A PAGAR', formatPeso(responses.reduce((s,r) => s + r.precio, 0))],
       [],
       ['BEBIDA','CANTIDAD'],
       ...Object.entries(cBebida).map(([k,v])=>[k,v])
