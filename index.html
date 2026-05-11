@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Almuerzo Día del Alumno – 2° Básico B</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --sp-blue: #0078d4; --sp-blue-dark: #005a9e; --sp-blue-light: #c7e0f4;
+    --sp-text: #323130; --sp-text-secondary: #605e5c;
+    --sp-border: #edebe9; --sp-bg: #f3f2f1; --sp-white: #ffffff;
+    --sp-red: #d13438; --sp-green: #107c10;
+    --sp-input-border: #8a8886; --sp-input-focus: #0078d4;
+  }
+  body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--sp-bg); color: var(--sp-text); min-height: 100vh; }
+
+  .sp-header { background: var(--sp-blue); padding: 0 32px; height: 48px; display: flex; align-items: center; gap: 12px; }
+  .sp-header-title { color: #fff; font-size: 15px; font-weight: 600; }
+  .sp-header-sub { color: rgba(255,255,255,.75); font-size: 13px; }
+
+  .sp-breadcrumb { background: var(--sp-white); border-bottom: 1px solid var(--sp-border); padding: 8px 32px; font-size: 12px; color: var(--sp-text-secondary); display: flex; align-items: center; gap: 6px; }
+  .sp-breadcrumb a { color: var(--sp-blue); text-decoration: none; }
+
+  .sp-main { max-width: 720px; margin: 28px auto; padding: 0 16px; }
+
+  .sp-form-header { background: var(--sp-white); border: 1px solid var(--sp-border); border-top: 4px solid var(--sp-blue); border-radius: 2px 2px 0 0; padding: 24px 32px 20px; }
+  .sp-form-title { font-size: 20px; font-weight: 600; color: var(--sp-text); display: flex; align-items: center; gap: 10px; }
+  .sp-form-title .icon { width: 36px; height: 36px; background: var(--sp-blue-light); border-radius: 4px; display: grid; place-items: center; font-size: 20px; }
+  .sp-form-subtitle { font-size: 13px; font-weight: 600; color: var(--sp-blue); margin-top: 4px; }
+  .sp-form-desc { font-size: 13px; color: var(--sp-text-secondary); margin-top: 6px; line-height: 1.5; }
+  .sp-required-note { font-size: 12px; color: var(--sp-text-secondary); margin-top: 14px; }
+  .sp-required-note span { color: var(--sp-red); }
+
+  .sp-form-body { background: var(--sp-white); border: 1px solid var(--sp-border); border-top: none; padding: 0 32px 28px; }
+  .sp-section { padding-top: 22px; }
+  .sp-section-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .6px; color: var(--sp-text-secondary); padding-bottom: 10px; border-bottom: 1px solid var(--sp-border); margin-bottom: 18px; }
+  .sp-field { margin-bottom: 20px; }
+  .sp-label { display: flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 600; color: var(--sp-text); margin-bottom: 6px; }
+  .sp-required-mark { color: var(--sp-red); font-size: 14px; }
+
+  .sp-select, .sp-input {
+    width: 100%; height: 32px; border: 1px solid var(--sp-input-border); border-radius: 2px;
+    padding: 0 10px; font-size: 14px; font-family: inherit; color: var(--sp-text);
+    background: var(--sp-white); transition: border-color .1s;
+  }
+  .sp-select {
+    appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23605e5c' d='M1.41 0L6 4.58 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 10px center; cursor: pointer;
+  }
+  .sp-select:focus, .sp-input:focus { outline: none; border-color: var(--sp-input-focus); box-shadow: 0 0 0 1px var(--sp-input-focus); }
+
+  .sp-choices { display: flex; flex-direction: column; gap: 10px; }
+  .sp-choice { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 1px solid var(--sp-border); border-radius: 2px; cursor: pointer; transition: background .1s, border-color .1s; user-select: none; }
+  .sp-choice:hover { background: #faf9f8; border-color: #c8c6c4; }
+  .sp-choice.selected { background: #eff6fc; border-color: var(--sp-blue); }
+  .sp-choice input[type=radio] { width: 16px; height: 16px; accent-color: var(--sp-blue); cursor: pointer; flex-shrink: 0; }
+  .sp-choice-text { font-size: 14px; }
+  .sp-choice-icon { font-size: 18px; }
+
+  .sp-subsection { border-left: 3px solid var(--sp-blue-light); padding-left: 16px; margin-top: 14px; animation: fadeIn .2s ease; }
+  .sp-subsection-label { font-size: 12px; font-weight: 600; color: var(--sp-blue); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; } }
+  .hidden { display: none !important; }
+
+  .sp-actions { display: flex; gap: 10px; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--sp-border); }
+  .sp-btn-primary { background: var(--sp-blue); color: #fff; border: none; border-radius: 2px; padding: 0 20px; height: 32px; font-size: 14px; font-family: inherit; font-weight: 600; cursor: pointer; transition: background .15s; display: flex; align-items: center; gap: 6px; }
+  .sp-btn-primary:hover { background: var(--sp-blue-dark); }
+  .sp-btn-secondary { background: transparent; color: var(--sp-blue); border: 1px solid var(--sp-blue); border-radius: 2px; padding: 0 20px; height: 32px; font-size: 14px; font-family: inherit; font-weight: 600; cursor: pointer; }
+  .sp-btn-secondary:hover { background: #eff6fc; }
+
+  .sp-toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--sp-green); color: #fff; padding: 12px 24px; border-radius: 2px; font-size: 14px; font-weight: 600; box-shadow: 0 4px 16px rgba(0,0,0,.18); z-index: 999; display: flex; align-items: center; gap: 8px; transition: transform .3s ease; max-width: 90vw; }
+  .sp-toast.show { transform: translateX(-50%) translateY(0); }
+  .sp-toast.error { background: var(--sp-red); }
+
+  .sp-summary { margin-top: 28px; background: var(--sp-white); border: 1px solid var(--sp-border); border-radius: 2px; overflow: hidden; }
+  .sp-summary-header { background: #f3f2f1; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; }
+  .sp-summary-title { font-size: 13px; font-weight: 600; color: var(--sp-text); display: flex; align-items: center; gap: 6px; }
+  .sp-summary-count { background: var(--sp-blue); color: #fff; font-size: 11px; font-weight: 700; border-radius: 10px; padding: 2px 8px; min-width: 20px; text-align: center; }
+  .sp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .sp-table th { text-align: left; padding: 9px 14px; background: #faf9f8; font-weight: 600; font-size: 12px; color: var(--sp-text-secondary); border-bottom: 1px solid var(--sp-border); white-space: nowrap; }
+  .sp-table td { padding: 9px 14px; border-bottom: 1px solid var(--sp-border); vertical-align: middle; }
+  .sp-table tr:last-child td { border-bottom: none; }
+  .sp-table tr:hover td { background: #faf9f8; }
+  .sp-table .del-btn { background: none; border: none; cursor: pointer; color: #a19f9d; font-size: 16px; padding: 0 4px; transition: color .15s; }
+  .sp-table .del-btn:hover { color: var(--sp-red); }
+
+  .sp-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .badge-hamb { background: #fff4ce; color: #7a5100; }
+  .badge-nugg { background: #dff6dd; color: #0b5a0b; }
+  .badge-beb  { background: #eff6fc; color: #004578; }
+
+  .sp-empty { text-align: center; padding: 28px 16px; color: var(--sp-text-secondary); font-size: 13px; }
+
+  .sp-export-bar { display: flex; justify-content: flex-end; padding: 10px 16px; border-top: 1px solid var(--sp-border); gap: 8px; flex-wrap: wrap; }
+  .sp-btn-sm { background: transparent; color: var(--sp-blue); border: 1px solid var(--sp-border); border-radius: 2px; padding: 0 12px; height: 28px; font-size: 12px; font-family: inherit; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: background .15s; }
+  .sp-btn-sm:hover { background: #faf9f8; }
+  .sp-btn-sm.excel { color: #107c10; border-color: #a9d3a9; }
+  .sp-btn-sm.excel:hover { background: #dff6dd; }
+
+  @media (max-width: 600px) {
+    .sp-header { padding: 0 16px; }
+    .sp-main { margin: 14px auto; }
+    .sp-form-header, .sp-form-body { padding-left: 18px; padding-right: 18px; }
+    .sp-table { font-size: 11px; }
+    .sp-table th, .sp-table td { padding: 7px 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sp-header">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+    <rect width="9" height="9" rx="1" fill="white" opacity=".9"/>
+    <rect x="11" width="9" height="9" rx="1" fill="white" opacity=".7"/>
+    <rect y="11" width="9" height="9" rx="1" fill="white" opacity=".7"/>
+    <rect x="11" y="11" width="9" height="9" rx="1" fill="white" opacity=".5"/>
+  </svg>
+  <span class="sp-header-title">Colegio</span>
+  <span class="sp-header-sub">/ Formularios /</span>
+  <span style="color:#fff;font-size:13px;font-weight:600;">Día del Alumno 2026</span>
+</div>
+
+<div class="sp-breadcrumb">
+  <a href="#">Inicio</a>
+  <svg width="6" height="10" viewBox="0 0 6 10"><path d="M1 1l4 4-4 4" stroke="#605e5c" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>
+  <a href="#">Formularios</a>
+  <svg width="6" height="10" viewBox="0 0 6 10"><path d="M1 1l4 4-4 4" stroke="#605e5c" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>
+  <span>Almuerzo Día del Alumno – 2° Básico B</span>
+</div>
+
+<div class="sp-main">
+
+  <div class="sp-form-header">
+    <div class="sp-form-title">
+      <div class="icon">🍔</div>
+      Almuerzo Día del Alumno
+    </div>
+    <div class="sp-form-subtitle">2° Básico B</div>
+    <p class="sp-form-desc">
+      Complete este formulario para inscribir el almuerzo de su hijo/a. Seleccione el nombre del alumno, el menú y la bebida. Al finalizar, descargue la planilla Excel con todos los registros.
+    </p>
+    <div class="sp-required-note"><span>* </span>Los campos marcados son obligatorios.</div>
+  </div>
+
+  <div class="sp-form-body">
+
+    <!-- QUIÉN INGRESA -->
+    <div class="sp-section">
+      <div class="sp-section-label">Datos del Apoderado / Responsable</div>
+      <div class="sp-field">
+        <label class="sp-label" for="ingresado-por">
+          Nombre de quien ingresa <span class="sp-required-mark">*</span>
+        </label>
+        <input class="sp-input" type="text" id="ingresado-por" placeholder="Ej: María González" autocomplete="name">
+      </div>
+    </div>
+
+    <!-- ALUMNO -->
+    <div class="sp-section">
+      <div class="sp-section-label">Identificación del Alumno/a</div>
+      <div class="sp-field">
+        <label class="sp-label" for="alumno">
+          Nombre del Alumno/a <span class="sp-required-mark">*</span>
+        </label>
+        <select class="sp-select" id="alumno">
+          <option value="">— Seleccione un alumno —</option>
+          <optgroup label="2° Básico B">
+            <option>Bautista Loyola Victoria Isabel</option>
+            <option>Burgos Rissios Mateo Tomas</option>
+            <option>Calderon Caceres Amalia Agustina</option>
+            <option>Caro Vicuña Bruno Emiliano</option>
+            <option>Cepeda Araneda Maria Paz</option>
+            <option>Charles Viera Matias Vicente</option>
+            <option>Espinoza Latorre Dante Octavio</option>
+            <option>Flores Acosta Josefina Amparo</option>
+            <option>Flores Diaz Diego Amaro</option>
+            <option>Friz Ulloa Avril Agustina</option>
+            <option>Gallardo Garcia Alonso Emiliano</option>
+            <option>Gonzalez Erazo Fernanda Agustina</option>
+            <option>Guerrero Montecino Agustina Ignacia</option>
+            <option>Hernández Valdés Amelia</option>
+            <option>Lagos Escamilla Javier Alonso</option>
+            <option>Lagos Tobar Alonso Javier</option>
+            <option>Livert Olave Luciana Isabella</option>
+            <option>Meneses Lienán Vicente Alonso</option>
+            <option>Molina Loo Maite Antonella</option>
+            <option>Morales Quijada Matilde Isidora</option>
+            <option>Pastenes Lienan Benjamín Vicente</option>
+            <option>Pinto Gaete Josefa Valentina</option>
+            <option>Polanco Aravena Bruno</option>
+            <option>Santa Ana Salinas Isabel Alejandra</option>
+            <option>Silva Concha Alonso</option>
+            <option>Torrealba Augustyn Amanda Isabel</option>
+            <option>Villamizar Castellano Santiago Leonardo</option>
+            <option>Yáñez Muñoz Octavio Ignacio</option>
+            <option>Zambrano Tapia Santiago Ignacio</option>
+          </optgroup>
+        </select>
+      </div>
+    </div>
+
+    <!-- MENÚ -->
+    <div class="sp-section">
+      <div class="sp-section-label">Selección de Menú</div>
+      <div class="sp-field">
+        <div class="sp-label">Plato Principal <span class="sp-required-mark">*</span></div>
+        <div class="sp-choices">
+          <label class="sp-choice" onclick="selectChoice('principal','hamburguesa',this)">
+            <input type="radio" name="principal" value="hamburguesa">
+            <span class="sp-choice-icon">🍔</span>
+            <span class="sp-choice-text">Hamburguesa</span>
+          </label>
+          <label class="sp-choice" onclick="selectChoice('principal','nugget',this)">
+            <input type="radio" name="principal" value="nugget">
+            <span class="sp-choice-icon">🍗</span>
+            <span class="sp-choice-text">Nugget</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="sp-subsection hidden" id="subsec-hamburguesa">
+        <div class="sp-subsection-label">¿Cómo la quiere?</div>
+        <div class="sp-choices" id="hamb-choices">
+          <label class="sp-choice" onclick="selectChoice('tipohamb','sola',this)">
+            <input type="radio" name="tipohamb" value="sola">
+            <span class="sp-choice-icon">🍔</span>
+            <span class="sp-choice-text">Hamburguesa Sola</span>
+          </label>
+          <label class="sp-choice" onclick="selectChoice('tipohamb','palta',this)">
+            <input type="radio" name="tipohamb" value="palta">
+            <span class="sp-choice-icon">🥑</span>
+            <span class="sp-choice-text">Hamburguesa con Palta</span>
+          </label>
+          <label class="sp-choice" onclick="selectChoice('tipohamb','mcfiesta',this)">
+            <input type="radio" name="tipohamb" value="mcfiesta">
+            <span class="sp-choice-icon">🎉</span>
+            <span class="sp-choice-text">McFiesta</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- BEBIDA -->
+    <div class="sp-section">
+      <div class="sp-section-label">Bebestible</div>
+      <div class="sp-field">
+        <div class="sp-label">Bebida <span class="sp-required-mark">*</span></div>
+        <div class="sp-choices">
+          <label class="sp-choice" onclick="selectChoice('bebida','coca-zero',this)">
+            <input type="radio" name="bebida" value="coca-zero">
+            <span class="sp-choice-icon">🥤</span>
+            <span class="sp-choice-text">Coca Cola Zero</span>
+          </label>
+          <label class="sp-choice" onclick="selectChoice('bebida','fanta-zero',this)">
+            <input type="radio" name="bebida" value="fanta-zero">
+            <span class="sp-choice-icon">🍊</span>
+            <span class="sp-choice-text">Fanta Zero</span>
+          </label>
+          <label class="sp-choice" onclick="selectChoice('bebida','sprite-zero',this)">
+            <input type="radio" name="bebida" value="sprite-zero">
+            <span class="sp-choice-icon">💚</span>
+            <span class="sp-choice-text">Sprite Zero</span>
+          </label>
+          <label class="sp-choice" onclick="selectChoice('bebida','jugo-manzana',this)">
+            <input type="radio" name="bebida" value="jugo-manzana">
+            <span class="sp-choice-icon">🍎</span>
+            <span class="sp-choice-text">Jugo de Manzana</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="sp-actions">
+      <button class="sp-btn-primary" onclick="submitForm()">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 3" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Guardar respuesta
+      </button>
+      <button class="sp-btn-secondary" onclick="resetForm()">Limpiar</button>
+    </div>
+
+  </div>
+
+  <!-- RESUMEN -->
+  <div class="sp-summary">
+    <div class="sp-summary-header">
+      <div class="sp-summary-title">
+        📋 Respuestas ingresadas
+        <span class="sp-summary-count" id="resp-count">0</span>
+      </div>
+    </div>
+    <div id="resp-empty" class="sp-empty">No hay respuestas registradas aún.</div>
+    <div style="overflow-x:auto;">
+      <table class="sp-table hidden" id="resp-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Alumno/a</th>
+            <th>Plato</th>
+            <th>Bebida</th>
+            <th>Ingresado por</th>
+            <th>Fecha / Hora</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="resp-tbody"></tbody>
+      </table>
+    </div>
+    <div class="sp-export-bar hidden" id="export-bar">
+      <button class="sp-btn-sm excel" onclick="exportExcel()">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+          <rect x="1" y="1" width="11" height="11" rx="1" stroke="#107c10" stroke-width="1.2" fill="#dff6dd"/>
+          <path d="M3.5 4.5L5.5 8.5M7.5 4.5L5.5 8.5" stroke="#107c10" stroke-width="1.2" stroke-linecap="round"/>
+          <path d="M8 4.5h2v4H8" stroke="#107c10" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M8 6.5h1.5" stroke="#107c10" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        Descargar Excel (.xlsx)
+      </button>
+      <button class="sp-btn-sm" onclick="window.print()">
+        <svg width="12" height="12" viewBox="0 0 12 12"><rect x="2" y="7" width="8" height="4" rx=".5" stroke="currentColor" stroke-width="1.3" fill="none"/><path d="M3 7V3a1 1 0 011-1h4a1 1 0 011 1v4" stroke="currentColor" stroke-width="1.3" fill="none"/><circle cx="9" cy="8.5" r=".7" fill="currentColor"/></svg>
+        Imprimir
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<div class="sp-toast" id="toast">
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <span id="toast-msg">Respuesta guardada</span>
+</div>
+
+<script>
+  const responses = [];
+  const state = { principal: null, tipohamb: null, bebida: null };
+
+  function selectChoice(group, value, el) {
+    state[group] = value;
+    el.closest('.sp-choices').querySelectorAll('.sp-choice').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    el.querySelector('input[type=radio]').checked = true;
+    if (group === 'principal') {
+      const sub = document.getElementById('subsec-hamburguesa');
+      if (value === 'hamburguesa') {
+        sub.classList.remove('hidden');
+      } else {
+        sub.classList.add('hidden');
+        state.tipohamb = null;
+        document.querySelectorAll('[name="tipohamb"]').forEach(r => r.checked = false);
+        document.getElementById('hamb-choices').querySelectorAll('.sp-choice').forEach(c => c.classList.remove('selected'));
+      }
+    }
+  }
+
+  function showToast(msg, isError = false) {
+    const t = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    t.classList.toggle('error', isError);
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3200);
+  }
+
+  function nowStr() {
+    return new Date().toLocaleString('es-CL', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+  }
+
+  function submitForm() {
+    const ingresadoPor = document.getElementById('ingresado-por').value.trim();
+    const alumno = document.getElementById('alumno').value;
+    if (!ingresadoPor)  { showToast('⚠ Ingresa tu nombre', true); return; }
+    if (!alumno)        { showToast('⚠ Selecciona un alumno', true); return; }
+    if (!state.principal) { showToast('⚠ Selecciona el plato principal', true); return; }
+    if (state.principal === 'hamburguesa' && !state.tipohamb) { showToast('⚠ Selecciona el tipo de hamburguesa', true); return; }
+    if (!state.bebida)  { showToast('⚠ Selecciona una bebida', true); return; }
+
+    const platoMap = { sola:'Hamburguesa Sola', palta:'Hamburguesa con Palta', mcfiesta:'McFiesta' };
+    const plato = state.principal === 'hamburguesa' ? platoMap[state.tipohamb] : 'Nugget';
+    const bebidaMap = { 'coca-zero':'Coca Cola Zero', 'fanta-zero':'Fanta Zero', 'sprite-zero':'Sprite Zero', 'jugo-manzana':'Jugo de Manzana' };
+
+    responses.push({ alumno, plato, bebida: bebidaMap[state.bebida], ingresadoPor, fecha: nowStr() });
+    renderTable();
+    showToast(`✓ ${alumno.split(' ')[0]} registrado/a`);
+    // Keep ingresado-por name for next entry; only reset menu choices
+    document.getElementById('alumno').value = '';
+    state.principal = null; state.tipohamb = null; state.bebida = null;
+    document.querySelectorAll('.sp-choice').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('input[type=radio]').forEach(r => r.checked = false);
+    document.getElementById('subsec-hamburguesa').classList.add('hidden');
+  }
+
+  function resetForm() {
+    document.getElementById('ingresado-por').value = '';
+    document.getElementById('alumno').value = '';
+    state.principal = null; state.tipohamb = null; state.bebida = null;
+    document.querySelectorAll('.sp-choice').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('input[type=radio]').forEach(r => r.checked = false);
+    document.getElementById('subsec-hamburguesa').classList.add('hidden');
+  }
+
+  function renderTable() {
+    const count = responses.length;
+    document.getElementById('resp-count').textContent = count;
+    const empty = document.getElementById('resp-empty');
+    const table = document.getElementById('resp-table');
+    const bar   = document.getElementById('export-bar');
+    empty.classList.toggle('hidden', count > 0);
+    table.classList.toggle('hidden', count === 0);
+    bar.classList.toggle('hidden', count === 0);
+
+    document.getElementById('resp-tbody').innerHTML = responses.map((r, i) => {
+      const badge = r.plato === 'Nugget' ? 'badge-nugg' : 'badge-hamb';
+      return `<tr>
+        <td style="color:#a19f9d;font-size:12px">${i+1}</td>
+        <td><strong>${r.alumno}</strong></td>
+        <td><span class="sp-badge ${badge}">${r.plato}</span></td>
+        <td><span class="sp-badge badge-beb">${r.bebida}</span></td>
+        <td style="color:var(--sp-text-secondary)">${r.ingresadoPor}</td>
+        <td style="color:var(--sp-text-secondary);font-size:12px;white-space:nowrap">${r.fecha}</td>
+        <td><button class="del-btn" onclick="deleteRow(${i})" title="Eliminar">✕</button></td>
+      </tr>`;
+    }).join('');
+  }
+
+  function deleteRow(i) { responses.splice(i, 1); renderTable(); }
+
+  function exportExcel() {
+    if (!responses.length) return;
+    const wb = XLSX.utils.book_new();
+
+    /* ─── Hoja 1: Inscripciones ─── */
+    const rows = [
+      ['Almuerzo Día del Alumno – 2° Básico B'],
+      ['Generado: ' + nowStr()],
+      [],
+      ['N°', 'Alumno/a', 'Plato Principal', 'Bebida', 'Ingresado por', 'Fecha y Hora'],
+      ...responses.map((r, i) => [i + 1, r.alumno, r.plato, r.bebida, r.ingresadoPor, r.fecha])
+    ];
+    const ws1 = XLSX.utils.aoa_to_sheet(rows);
+    ws1['!cols'] = [{ wch: 5 }, { wch: 36 }, { wch: 24 }, { wch: 18 }, { wch: 28 }, { wch: 20 }];
+    ws1['!merges'] = [
+      { s: { r: 0, c: 0 }, e: { r: 0, c: 5 } },
+      { s: { r: 1, c: 0 }, e: { r: 1, c: 5 } }
+    ];
+    XLSX.utils.book_append_sheet(wb, ws1, 'Inscripciones');
+
+    /* ─── Hoja 2: Resumen ─── */
+    const counts = {};
+    responses.forEach(r => { counts[r.plato] = (counts[r.plato] || 0) + 1; });
+    const counts2 = {};
+    responses.forEach(r => { counts2[r.bebida] = (counts2[r.bebida] || 0) + 1; });
+
+    const sum = [
+      ['Resumen – Almuerzo Día del Alumno 2° Básico B'],
+      [],
+      ['PLATO', 'CANTIDAD'],
+      ...Object.entries(counts).map(([k, v]) => [k, v]),
+      ['TOTAL', responses.length],
+      [],
+      ['BEBIDA', 'CANTIDAD'],
+      ...Object.entries(counts2).map(([k, v]) => [k, v]),
+      ['TOTAL', responses.length]
+    ];
+    const ws2 = XLSX.utils.aoa_to_sheet(sum);
+    ws2['!cols'] = [{ wch: 30 }, { wch: 12 }];
+    ws2['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 1 } }];
+    XLSX.utils.book_append_sheet(wb, ws2, 'Resumen');
+
+    XLSX.writeFile(wb, 'Almuerzo_DiadelAlumno_2B.xlsx');
+  }
+</script>
+</body>
+</html>
