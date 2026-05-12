@@ -437,8 +437,9 @@
   ];
 
   function rebuildAlumnoSelect() {
-    const registrados = new Set(responses.map(r => r.alumno));
-    const pendientes  = TODOS_ALUMNOS.filter(a => !registrados.has(a));
+    const registradosHoy   = new Set(responses.map(r => r.alumno));
+    const todosRegistrados = new Set([...alumnosPreRegistrados, ...registradosHoy]);
+    const pendientes       = TODOS_ALUMNOS.filter(a => !todosRegistrados.has(a));
     const sel = document.getElementById('alumno');
     sel.innerHTML = '<option value="">— Seleccione un alumno —</option>';
     if (pendientes.length > 0) {
@@ -452,7 +453,7 @@
       sel.appendChild(grp);
     }
     const total = TODOS_ALUMNOS.length;
-    const reg   = registrados.size;
+    const reg   = todosRegistrados.size;
     const pend  = pendientes.length;
     const info  = document.getElementById('pendientes-count');
     if (info) {
@@ -685,23 +686,22 @@
     cargarAlumnosRegistrados();
   });
 
+  // Alumnos ya registrados en Google Sheets (sesión previa)
+  const alumnosPreRegistrados = new Set();
+
   function cargarAlumnosRegistrados() {
     const info = document.getElementById('pendientes-count');
-    if (info) { info.textContent = '⏳ Cargando registros previos...'; }
+    if (info) info.textContent = '⏳ Cargando registros previos...';
     fetch('https://script.google.com/macros/s/AKfycbxGfQurCg_ZUQ834DgJznnc9xvTwOkCprD1JC9h6_vuTc43CTcq7jP15B9JKS74KkmYUw/exec')
       .then(r => r.json())
       .then(data => {
         if (data.alumnos && data.alumnos.length > 0) {
-          data.alumnos.forEach(nombre => {
-            if (!responses.find(r => r.alumno === nombre)) {
-              responses.push({ alumno: nombre, _preloaded: true });
-            }
-          });
-          rebuildAlumnoSelect();
+          data.alumnos.forEach(n => alumnosPreRegistrados.add(n.trim()));
         }
+        rebuildAlumnoSelect();
       })
       .catch(() => {
-        if (info) info.textContent = 'No se pudo verificar registros previos.';
+        if (info) info.textContent = '⚠ No se pudo verificar registros previos.';
       });
   }
 
