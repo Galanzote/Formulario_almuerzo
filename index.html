@@ -404,6 +404,11 @@
   let bebidaIndep = null;
   const responses = [];
 
+  const TODOS_PROFESORES = [
+    'Miss Lorena',
+    'Miss Karla'
+  ];
+
   const TODOS_ALUMNOS = [
     'Bautista Loyola Victoria Isabel',
     'Burgos Rissios Mateo Tomas',
@@ -440,11 +445,26 @@
     const registradosHoy   = new Set(responses.map(r => r.alumno));
     const todosRegistrados = new Set([...alumnosPreRegistrados, ...registradosHoy]);
     const pendientes       = TODOS_ALUMNOS.filter(a => !todosRegistrados.has(a));
+    const profPendientes = TODOS_PROFESORES.filter(p => !todosRegistrados.has(p));
     const sel = document.getElementById('alumno');
     sel.innerHTML = '<option value="">— Seleccione un alumno —</option>';
+
+    // Profesoras
+    if (profPendientes.length > 0) {
+      const grpProf = document.createElement('optgroup');
+      grpProf.label = '👩‍🏫 Identificación del Profesor/a';
+      profPendientes.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p; opt.textContent = p;
+        grpProf.appendChild(opt);
+      });
+      sel.appendChild(grpProf);
+    }
+
+    // Alumnos
     if (pendientes.length > 0) {
       const grp = document.createElement('optgroup');
-      grp.label = '2° Básico B';
+      grp.label = '🎒 2° Básico B';
       pendientes.forEach(a => {
         const opt = document.createElement('option');
         opt.value = a; opt.textContent = a;
@@ -452,14 +472,14 @@
       });
       sel.appendChild(grp);
     }
-    const total = TODOS_ALUMNOS.length;
+    const total = TODOS_ALUMNOS.length + TODOS_PROFESORES.length;
     const reg   = todosRegistrados.size;
-    const pend  = pendientes.length;
+    const pend  = pendientes.length + profPendientes.length;
     const info  = document.getElementById('pendientes-count');
     if (info) {
       info.textContent = reg > 0
         ? `✅ ${reg} de ${total} inscritos — faltan ${pend}`
-        : `${total} alumnos disponibles`;
+        : `${total} personas disponibles`;
       info.style.color = pend === 0 ? 'var(--sp-green)' : 'var(--sp-text-secondary)';
     }
   }
@@ -692,17 +712,26 @@
   function cargarAlumnosRegistrados() {
     const info = document.getElementById('pendientes-count');
     if (info) info.textContent = '⏳ Cargando registros previos...';
-    fetch('https://script.google.com/macros/s/AKfycbxGfQurCg_ZUQ834DgJznnc9xvTwOkCprD1JC9h6_vuTc43CTcq7jP15B9JKS74KkmYUw/exec')
-      .then(r => r.json())
-      .then(data => {
-        if (data.alumnos && data.alumnos.length > 0) {
-          data.alumnos.forEach(n => alumnosPreRegistrados.add(n.trim()));
-        }
-        rebuildAlumnoSelect();
-      })
-      .catch(() => {
-        if (info) info.textContent = '⚠ No se pudo verificar registros previos.';
-      });
+    const url = 'https://script.google.com/macros/s/AKfycbxGfQurCg_ZUQ834DgJznnc9xvTwOkCprD1JC9h6_vuTc43CTcq7jP15B9JKS74KkmYUw/exec?action=getAlumnos';
+    // Usamos un script tag dinámico (JSONP) para evitar restricciones CORS con Apps Script
+    const callbackName = 'gsCallback_' + Date.now();
+    window[callbackName] = function(data) {
+      delete window[callbackName];
+      document.getElementById('gs-script-tag') && document.getElementById('gs-script-tag').remove();
+      if (data.alumnos && data.alumnos.length > 0) {
+        data.alumnos.forEach(n => alumnosPreRegistrados.add(n.trim()));
+      }
+      rebuildAlumnoSelect();
+    };
+    const script = document.createElement('script');
+    script.id = 'gs-script-tag';
+    script.onerror = () => {
+      console.warn('No se pudo cargar registros previos');
+      if (info) info.textContent = '⚠ No se pudo verificar registros previos.';
+      rebuildAlumnoSelect();
+    };
+    script.src = url + '&callback=' + callbackName;
+    document.head.appendChild(script);
   }
 
   function exportExcel() {
