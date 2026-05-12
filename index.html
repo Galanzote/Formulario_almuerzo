@@ -193,38 +193,10 @@
         <label class="sp-label" for="alumno">Nombre del Alumno/a <span class="sp-required-mark">*</span></label>
         <select class="sp-select" id="alumno">
           <option value="">— Seleccione un alumno —</option>
-          <optgroup label="2° Básico B">
-            <option>Bautista Loyola Victoria Isabel</option>
-            <option>Burgos Rissios Mateo Tomas</option>
-            <option>Calderon Caceres Amalia Agustina</option>
-            <option>Caro Vicuña Bruno Emiliano</option>
-            <option>Cepeda Araneda Maria Paz</option>
-            <option>Charles Viera Matias Vicente</option>
-            <option>Espinoza Latorre Dante Octavio</option>
-            <option>Flores Acosta Josefina Amparo</option>
-            <option>Flores Diaz Diego Amaro</option>
-            <option>Friz Ulloa Avril Agustina</option>
-            <option>Gallardo Garcia Alonso Emiliano</option>
-            <option>Gonzalez Erazo Fernanda Agustina</option>
-            <option>Guerrero Montecino Agustina Ignacia</option>
-            <option>Hernández Valdés Amelia</option>
-            <option>Lagos Escamilla Javier Alonso</option>
-            <option>Lagos Tobar Alonso Javier</option>
-            <option>Livert Olave Luciana Isabella</option>
-            <option>Meneses Lienán Vicente Alonso</option>
-            <option>Molina Loo Maite Antonella</option>
-            <option>Morales Quijada Matilde Isidora</option>
-            <option>Pastenes Lienan Benjamín Vicente</option>
-            <option>Pinto Gaete Josefa Valentina</option>
-            <option>Polanco Aravena Bruno</option>
-            <option>Santa Ana Salinas Isabel Alejandra</option>
-            <option>Silva Concha Alonso</option>
-            <option>Torrealba Augustyn Amanda Isabel</option>
-            <option>Villamizar Castellano Santiago Leonardo</option>
-            <option>Yáñez Muñoz Octavio Ignacio</option>
-            <option>Zambrano Tapia Santiago Ignacio</option>
-          </optgroup>
         </select>
+        <div id="alumnos-pendientes-info" style="font-size:12px;color:var(--sp-text-secondary);margin-top:6px;">
+          <span id="pendientes-count"></span>
+        </div>
       </div>
     </div>
 
@@ -432,6 +404,65 @@
   let bebidaIndep = null;
   const responses = [];
 
+  const TODOS_ALUMNOS = [
+    'Bautista Loyola Victoria Isabel',
+    'Burgos Rissios Mateo Tomas',
+    'Calderon Caceres Amalia Agustina',
+    'Caro Vicuña Bruno Emiliano',
+    'Cepeda Araneda Maria Paz',
+    'Charles Viera Matias Vicente',
+    'Espinoza Latorre Dante Octavio',
+    'Flores Acosta Josefina Amparo',
+    'Flores Diaz Diego Amaro',
+    'Friz Ulloa Avril Agustina',
+    'Gallardo Garcia Alonso Emiliano',
+    'Gonzalez Erazo Fernanda Agustina',
+    'Guerrero Montecino Agustina Ignacia',
+    'Hernández Valdés Amelia',
+    'Lagos Escamilla Javier Alonso',
+    'Lagos Tobar Alonso Javier',
+    'Livert Olave Luciana Isabella',
+    'Meneses Lienán Vicente Alonso',
+    'Molina Loo Maite Antonella',
+    'Morales Quijada Matilde Isidora',
+    'Pastenes Lienan Benjamín Vicente',
+    'Pinto Gaete Josefa Valentina',
+    'Polanco Aravena Bruno',
+    'Santa Ana Salinas Isabel Alejandra',
+    'Silva Concha Alonso',
+    'Torrealba Augustyn Amanda Isabel',
+    'Villamizar Castellano Santiago Leonardo',
+    'Yáñez Muñoz Octavio Ignacio',
+    'Zambrano Tapia Santiago Ignacio'
+  ];
+
+  function rebuildAlumnoSelect() {
+    const registrados = new Set(responses.map(r => r.alumno));
+    const pendientes  = TODOS_ALUMNOS.filter(a => !registrados.has(a));
+    const sel = document.getElementById('alumno');
+    sel.innerHTML = '<option value="">— Seleccione un alumno —</option>';
+    if (pendientes.length > 0) {
+      const grp = document.createElement('optgroup');
+      grp.label = '2° Básico B';
+      pendientes.forEach(a => {
+        const opt = document.createElement('option');
+        opt.value = a; opt.textContent = a;
+        grp.appendChild(opt);
+      });
+      sel.appendChild(grp);
+    }
+    const total = TODOS_ALUMNOS.length;
+    const reg   = registrados.size;
+    const pend  = pendientes.length;
+    const info  = document.getElementById('pendientes-count');
+    if (info) {
+      info.textContent = reg > 0
+        ? `✅ ${reg} de ${total} inscritos — faltan ${pend}`
+        : `${total} alumnos disponibles`;
+      info.style.color = pend === 0 ? 'var(--sp-green)' : 'var(--sp-text-secondary)';
+    }
+  }
+
   const BEBIDA_LABELS = { coca: 'Coca Cola Zero', fanta: 'Fanta Zero', sprite: 'Sprite Zero', cocanormal: 'Coca Cola Normal', jugo: 'Jugo de Manzana' };
   const COMBO_LABELS = { mcnifica: 'Combo McNifica', cuarto: 'Combo Cuarto de Libra con Queso', nuggets: 'Combo Chicken McNuggets' };
 
@@ -583,6 +614,7 @@
     const entry = { alumno, pedido, detalle, bebida, ingresadoPor, fecha: nowStr(), precio };
     responses.push(entry);
     renderTable();
+    rebuildAlumnoSelect();
 
     // Enviar a Google Sheets
     showToast('⏳ Guardando en planilla...', false);
@@ -645,9 +677,34 @@
     }).join('');
   }
 
-  function deleteRow(i) { responses.splice(i, 1); renderTable(); }
+  function deleteRow(i) { responses.splice(i, 1); renderTable(); rebuildAlumnoSelect(); }
 
   // ── EXCEL ──
+  document.addEventListener('DOMContentLoaded', () => {
+    rebuildAlumnoSelect();
+    cargarAlumnosRegistrados();
+  });
+
+  function cargarAlumnosRegistrados() {
+    const info = document.getElementById('pendientes-count');
+    if (info) { info.textContent = '⏳ Cargando registros previos...'; }
+    fetch('https://script.google.com/macros/s/AKfycbxGfQurCg_ZUQ834DgJznnc9xvTwOkCprD1JC9h6_vuTc43CTcq7jP15B9JKS74KkmYUw/exec')
+      .then(r => r.json())
+      .then(data => {
+        if (data.alumnos && data.alumnos.length > 0) {
+          data.alumnos.forEach(nombre => {
+            if (!responses.find(r => r.alumno === nombre)) {
+              responses.push({ alumno: nombre, _preloaded: true });
+            }
+          });
+          rebuildAlumnoSelect();
+        }
+      })
+      .catch(() => {
+        if (info) info.textContent = 'No se pudo verificar registros previos.';
+      });
+  }
+
   function exportExcel() {
     if (!responses.length) return;
     const wb = XLSX.utils.book_new();
